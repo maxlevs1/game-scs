@@ -1,0 +1,19 @@
+{
+  "name": "game-scs",
+  "version": "0.1.0",
+  "description": "Game saves control system. Automatily commitimg new changes and restor if it deleted.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "gulp": "./node_modules/.bin/gulp",
+    "ing": "sh init.sh"
+  },
+  "author": "MaxLevs <maxlevs@mail.ru>",
+  "license": "GNU GPL",
+  "dependencies": {
+    "gaze": "^1.1.2",
+    "gulp": "^3.9.1",
+    "gulp-git": "^1.12.0"
+  },
+  "optionalDependencies": {}
+}
