@@ -8,7 +8,7 @@ if [ -z $1 ]; then
 	exit;
 fi
 case `ls | grep $1` in 
-	$1) echo "True path!" ;;
+	$1) clear; clear; echo "True path!" ;;
 	*) echo "Get the saving path!"; exit;; 
 esac
 
@@ -19,17 +19,19 @@ if [ ! -d "$DIRECTORY" ]; then
 	git init;
 fi
 
-echo "Installing dependency libraries!"
-npm install
 TEMPORARY="$1/some_save_file.lak"
 echo "Some saves data!" > $TEMPORARY
-echo "{\"path\" : \"saver\",\"sver\" : 0}" > "config.json"
+echo "{\"path\" : \"$1\",\"sver\" : 0}" > "config.json"
+echo "" > ".gitignore"
 git add .gitignore config.json $1
 git commit -m 'Getting started!'
 echo "/*\n!/.gitignore\n!/config.json\n!/saver/\n!/saver/*" > ".gitignore"
 rm $TEMPORARY
 git add -A
 git commit -m 'Activate ignotring needless files'
+
+echo "Installing dependency libraries!"
+npm install
 
 echo "Game-SCS has been initialized!"
 echo "Use \"cd <saves_directory> & gulp\" in command line for start it!"
