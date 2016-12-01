@@ -5,15 +5,32 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "gulp": "./node_modules/.bin/gulp",
+    "gulp": "gulp",
     "ing": "sh init.sh"
   },
   "author": "MaxLevs <maxlevs@mail.ru>",
-  "license": "GNU GPL",
+  "license": "GPL-3.0",
   "dependencies": {
     "gaze": "^1.1.2",
     "gulp": "^3.9.1",
     "gulp-git": "^1.12.0"
   },
-  "optionalDependencies": {}
+  "optionalDependencies": {},
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maxlevs1/game-scs.git"
+  },
+  "keywords": [
+    "game",
+    "save",
+    "control",
+    "system",
+    "killing",
+    "room"
+  ],
+  "bugs": {
+    "url": "https://github.com/maxlevs1/game-scs/issues"
+  },
+  "homepage": "https://github.com/maxlevs1/game-scs#readme"
 }
