@@ -4,15 +4,14 @@ const
 	fs = require('fs');
 	gulp = require("gulp"),
 	git  = require("gulp-git"),
-	Gazes = require('gaze'),
-	async = require('async');
+	Gazes = require('gaze');
 
 let
 	incr = 1,
 	configName = 'config.json',
 	config;
 
-applyConf = () => {
+let applyConf = () => {
 	config = JSON.parse(fs.readFileSync(configName, 'utf8'));
 };
 
@@ -33,9 +32,12 @@ const
 	save_watcher = new Gazes(save_path_direct);
 
 gulp.task('watch', function (cb) {
+	console.log("Wanthing '", config.path, "'");
+
 	save_watcher.on('ready', function(watcher) {
 		console.log('Ready!!')
 	});
+
 	save_watcher.on('all', function(event, filepath) {
 		console.log(event, filepath);
 		switch (event) {
@@ -55,6 +57,7 @@ gulp.task('watch', function (cb) {
 				break;
 			default :;
 		}
+		console.log();
 	});
 	cb();
 });
