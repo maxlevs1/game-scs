@@ -4,16 +4,65 @@ const
 	fs = require('fs');
 	gulp = require("gulp"),
 	git  = require("gulp-git"),
-	Gazes = require('gaze');
+	gaze = require('gaze');
 
 let
-	incr = 1,
 	configName = 'config.json',
 	config;
+
+global.tKey;
+
+//functions
+let timer = (fun, ms, trKey) => {
+		if (trKey) {
+			clearTimeout(trKey);
+		}
+		return setTimeout(fun, ms);
+};
 
 let applyConf = () => {
 	config = JSON.parse(fs.readFileSync(configName, 'utf8'));
 };
+
+let checking = (cb, type) => {
+	git.status({args: '--porcelain'}, (err, stdout) => {
+		if(stdout){
+			cb();
+		}
+	});
+};
+
+let saving = () => {
+	//Update config.path
+	var mes = "Save #" + (++config.sver);
+	fs.writeFileSync(configName, JSON.stringify(config));
+	console.log("=================");
+	console.log("     SAVING!     ");
+	console.log("=================");
+	gulp.src('./')
+		.pipe(git.add())
+		.pipe(git.commit(mes));
+};
+
+let restoring = () => {
+	console.log("==================");
+	console.log("    RESTORING!    ");
+	console.log("==================");
+	git.reset('HEAD', {args:'--hard'});
+};
+
+let save = () => {
+	checking(saving, 0);
+};
+
+let restore = () => {
+	//console.log("L!", global.tKey);
+	global.tKey = timer(() => {
+		checking(restoring, 1)
+	}, 10, global.tKey);
+};
+
+
 
 try{
 	applyConf();
@@ -28,37 +77,25 @@ try{
 
 const
 	save_path_name = config.path,
-	save_path_direct = save_path_name+'/**/*',
-	save_watcher = new Gazes(save_path_direct);
+	save_path_direct = save_path_name+'/**/*';
 
 gulp.task('watch', function (cb) {
-	console.log("Wanthing '", config.path, "'");
-
-	save_watcher.on('ready', function(watcher) {
-		console.log('Ready!!')
-	});
-
-	save_watcher.on('all', function(event, filepath) {
-		console.log(event, filepath);
-		switch (event) {
-			case 'changed': 
-				var 
-				text = fs.readFileSync(configName, 'utf8');
-				text = JSON.parse(text);
-				var mes = "Save #" + (++text.sver);
-				text = JSON.stringify(text);
-				fs.writeFileSync(configName, text);
-				return gulp.src('./'+save_path_direct)
-					.pipe(git.add())
-					.pipe(git.commit(mes));
-				break;
-			case 'deleted':
-				return git.reset('HEAD', {args:'--hard'});
-				break;
-			default :;
-		}
+	gaze(save_path_direct, (err, watcher) => {
+		console.log("Ok!", "Watching '", config.path, "'");
+		console.log("=================");
+		console.log("|     START     |");
+		console.log("=================");
 		console.log();
+
+		watcher.on('ready',  (watcher) => {
+			console.log('Ready!')
+		});
+
+		watcher.on('changed',	save);
+		watcher.on('added',		save);
+		watcher.on('deleted',	restore);
 	});
+
 	cb();
 });
 
