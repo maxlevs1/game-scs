@@ -20,10 +20,6 @@ let timer = (fun, ms, trKey) => {
 		return setTimeout(fun, ms);
 };
 
-let applyConf = () => {
-	config = JSON.parse(fs.readFileSync(configName, 'utf8'));
-};
-
 let checking = (cb, type) => {
 	git.status({args: '--porcelain'}, (err, stdout) => {
 		if(stdout){
@@ -62,18 +58,7 @@ let restore = () => {
 	}, 10, global.tKey);
 };
 
-
-
-try{
-	applyConf();
-} catch (e) { 
-	let confDatas = {
-		"path" : "saves",
-		"sver" : 0
-	};
-	fs.writeFileSync(configName, JSON.stringify(confDatas));
-	applyConf();
-}
+config = JSON.parse(fs.readFileSync(configName, 'utf8'));
 
 const
 	save_path_name = config.path,
